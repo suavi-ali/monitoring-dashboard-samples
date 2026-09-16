@@ -49,9 +49,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Replica Memory Usage",
+          "title": "Replica Lag",
           "text": {
-            "content": "Replica instance memory usage indicates replica load.",
+            "content": "How far replicas are behind the primary node, in seconds.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -114,6 +114,293 @@
         "height": 16,
         "width": 24,
         "widget": {
+          "title": "Replica Lag",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_replica_lag{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Network Lag",
+          "text": {
+            "content": "Lag from primary commit to replica receive, in seconds. This is a sub-component of overall replica lag (available for MySQL and PostgreSQL).",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "PostgreSQL Replica Byte Lag",
+          "text": {
+            "content": "Replication lag in bytes for PostgreSQL replicas, grouped by sent location.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Network Lag",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_network_lag{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "PostgreSQL Replica Byte Lag",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, sent_location) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_postgresql_replication_replica_byte_lag{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL Replica I/O & SQL Error Numbers",
+          "text": {
+            "content": "Last I/O and SQL thread error numbers for MySQL replicas.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL Replica Thread Running States",
+          "text": {
+            "content": "Whether the I/O and SQL threads are running on MySQL replicas.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL Replica I/O & SQL Error Numbers",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_replication_last_io_errno{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              },
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_replication_last_sql_errno{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL Replica Thread Running States",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, state) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_replication_slave_io_running_state{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              },
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, state) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_replication_slave_sql_running_state{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 72,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica Memory Usage",
+          "text": {
+            "content": "Replica instance memory usage indicates replica load.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 72,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica CPU Usage",
+          "text": {
+            "content": "Replica instance CPU usage indicates replica load.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 80,
+        "height": 16,
+        "width": 24,
+        "widget": {
           "title": "Replica Memory Usage",
           "xyChart": {
             "chartOptions": {
@@ -138,50 +425,8 @@
         }
       },
       {
-        "yPos": 24,
-        "height": 8,
-        "width": 24,
-        "widget": {
-          "title": "Replica CPU Usage",
-          "text": {
-            "content": "Replica instance CPU usage indicates replica load.",
-            "format": "RAW",
-            "style": {
-              "backgroundColor": "#FFFFFF",
-              "fontSize": "FS_LARGE",
-              "horizontalAlignment": "H_LEFT",
-              "padding": "P_EXTRA_SMALL",
-              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
-              "textColor": "#212121",
-              "verticalAlignment": "V_TOP"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 24,
+        "yPos": 80,
         "xPos": 24,
-        "height": 8,
-        "width": 24,
-        "widget": {
-          "title": "Replica Log Archive Failures",
-          "text": {
-            "content": "Total number of log archive failures per replica.",
-            "format": "RAW",
-            "style": {
-              "backgroundColor": "#FFFFFF",
-              "fontSize": "FS_LARGE",
-              "horizontalAlignment": "H_LEFT",
-              "padding": "P_EXTRA_SMALL",
-              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
-              "textColor": "#212121",
-              "verticalAlignment": "V_TOP"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 32,
         "height": 16,
         "width": 24,
         "widget": {
@@ -210,42 +455,13 @@
         }
       },
       {
-        "yPos": 32,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Replica Log Archive Failures",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_log_archive_failure_count{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 48,
+        "yPos": 96,
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Replica Lag",
+          "title": "MySQL InnoDB History List Length",
           "text": {
-            "content": "How far replicas are behind the master node, in seconds.",
+            "content": "InnoDB history list length on MySQL replicas, indicating MVCC undo log size.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -260,11 +476,33 @@
         }
       },
       {
-        "yPos": 56,
+        "yPos": 96,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Active Transactions Longest Time",
+          "text": {
+            "content": "Duration of the longest active InnoDB transaction on MySQL replicas, in seconds.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 104,
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Replica Lag",
+          "title": "MySQL InnoDB History List Length",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -275,7 +513,259 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_replica_lag{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_innodb_history_list_length{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 104,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Active Transactions Longest Time",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_innodb_active_trx_longest_time{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 120,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Active Transactions",
+          "text": {
+            "content": "Number of active InnoDB transactions on MySQL replicas.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 120,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Active Transaction Rows Locked & Modified",
+          "text": {
+            "content": "Total number of rows locked and modified by currently active InnoDB transactions on MySQL replicas.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 128,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Active Transactions",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_innodb_active_transactions{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 128,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Active Transaction Rows Locked & Modified",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_innodb_active_trx_rows_locked{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              },
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_mysql_innodb_active_trx_rows_modified{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 144,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Row Lock Time",
+          "text": {
+            "content": "Time spent waiting for row locks on MySQL replicas.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 144,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Lock Waits, Timeouts & Deadlocks",
+          "text": {
+            "content": "Rate of row lock waits, lock timeouts, and deadlocks on MySQL replicas.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 152,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Row Lock Time",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    rate(\n      cloudsql_googleapis_com:database_mysql_innodb_row_lock_time{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "unitOverride": "ms/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 152,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL InnoDB Lock Waits, Timeouts & Deadlocks",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    rate(\n      cloudsql_googleapis_com:database_mysql_innodb_row_lock_waits_count{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              },
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    rate(\n      cloudsql_googleapis_com:database_mysql_innodb_lock_timeout_count{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              },
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    rate(\n      cloudsql_googleapis_com:database_mysql_innodb_deadlocks_count{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
